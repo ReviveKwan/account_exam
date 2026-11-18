@@ -32,6 +32,7 @@ func Setup(cfg *config.Config, userHandler *handler.UserHandler, examHandler *ha
 	{
 		auth.GET("/chapters", examHandler.ListChapters)
 		auth.GET("/exams", examHandler.ListChapters) // 复用，实际可分离
+		auth.GET("/questions/:id", examHandler.GetQuestionDetail)
 		auth.GET("/exams/:id", examHandler.GetExamDetail)
 		auth.POST("/exams/:id/start", examHandler.StartExam)
 		auth.GET("/exams/:id/resume", examHandler.ResumeExam)

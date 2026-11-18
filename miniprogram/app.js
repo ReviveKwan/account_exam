@@ -3,10 +3,8 @@ App({
     token: '',
     userInfo: null,
     envId: 'wechat-app-d6gjceiz966031f7f',
-    // 与控制台服务名完全一致
-    serviceName: 'accounting-exam',
-    // callContainer 异常时自动降级到公网（开发联调用）
-    publicBase: 'https://accounting-exam-349296-12-1534378013.sh.run.tcloudbase.com',
+    // 与云托管服务名完全一致（正式环境仅用 callContainer，不走测试域名）
+    serviceName: 'accounting-exam-v1',
     cloud: null,
     cloudReady: null
   },

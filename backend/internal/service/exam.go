@@ -104,19 +104,24 @@ func buildBadges(chapterNo int, bestScore float64, totalQ int) []string {
 	return badges
 }
 
-// GetExamDetail 考试详情（始终返回答案/解析，供前端单题确认后判对错；mode 仅影响前端交互文案）
+// GetExamDetail 考试详情。
+// 为控制 callContainer 体积与耗时：先返回答案供本地判对错，解析/法条按需另取。
 func (s *ExamService) GetExamDetail(examID string, mode int) (*ExamDetail, error) {
 	_ = mode
 	exam, err := s.examRepo.GetByID(examID)
 	if err != nil {
 		return nil, fmt.Errorf("考试不存在")
 	}
-	questions, err := s.questionRepo.GetByIDs(exam.QuestionIDs)
-	if err != nil {
-		return nil, fmt.Errorf("获取题目失败")
+
+	// 优先按章节拉取（比大 $in 更稳），再按试卷题序重排
+	questions, err := s.questionRepo.GetByChapterNo(exam.ChapterNo)
+	if err != nil || len(questions) == 0 {
+		questions, err = s.questionRepo.GetByIDs(exam.QuestionIDs)
+		if err != nil {
+			return nil, fmt.Errorf("获取题目失败: %v", err)
+		}
 	}
 
-	// 按 exam.QuestionIDs 顺序重排
 	qMap := make(map[string]*model.Question)
 	for i := range questions {
 		qMap[questions[i].ID] = &questions[i]
@@ -130,12 +135,29 @@ func (s *ExamService) GetExamDetail(examID string, mode int) (*ExamDetail, error
 		brief := QuestionBrief{
 			ID: q.ID, QuestionNo: q.QuestionNo, Type: q.Type, Stem: q.Stem,
 			Options: q.Options, YearTag: q.YearTag, IsModified: q.IsModified,
-			Answer: q.Answer, Analysis: q.Analysis, LawCitation: q.LawCitation,
+			Answer: q.Answer,
+			// Analysis / LawCitation 在确认答案时按题拉取，降低首包体积
 		}
 		qList = append(qList, brief)
 	}
+	if len(qList) == 0 {
+		return nil, fmt.Errorf("试卷无有效题目")
+	}
 
 	return &ExamDetail{Exam: *exam, Questions: qList}, nil
+}
+
+// GetQuestionDetail 单题详情（含解析/法条）
+func (s *ExamService) GetQuestionDetail(questionID string) (*QuestionBrief, error) {
+	q, err := s.questionRepo.GetByID(questionID)
+	if err != nil {
+		return nil, fmt.Errorf("题目不存在")
+	}
+	return &QuestionBrief{
+		ID: q.ID, QuestionNo: q.QuestionNo, Type: q.Type, Stem: q.Stem,
+		Options: q.Options, YearTag: q.YearTag, IsModified: q.IsModified,
+		Answer: q.Answer, Analysis: q.Analysis, LawCitation: q.LawCitation,
+	}, nil
 }
 
 // StartExam 开始考试（有进行中记录则复用）

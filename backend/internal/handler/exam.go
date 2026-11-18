@@ -23,7 +23,8 @@ func (h *ExamHandler) ListChapters(c *gin.Context) {
 	userID := c.GetString("user_id")
 	chapters, dashboard, err := h.examService.ListChapters(userID)
 	if err != nil {
-		response.Error(c, 1001, "获取章节列表失败")
+		// 把底层错误带回，便于排查云托管 API Key / 集合权限问题
+		response.Error(c, 1001, "获取章节列表失败: "+err.Error())
 		return
 	}
 	response.Success(c, gin.H{"chapters": chapters, "dashboard": dashboard})
@@ -38,6 +39,15 @@ func (h *ExamHandler) GetExamDetail(c *gin.Context) {
 		return
 	}
 	response.Success(c, gin.H{"exam": detail})
+}
+
+func (h *ExamHandler) GetQuestionDetail(c *gin.Context) {
+	detail, err := h.examService.GetQuestionDetail(c.Param("id"))
+	if err != nil {
+		response.Error(c, 1008, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"question": detail})
 }
 
 func (h *ExamHandler) StartExam(c *gin.Context) {

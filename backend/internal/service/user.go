@@ -59,7 +59,7 @@ func (s *UserService) LoginAsGuest() (*model.User, string, error) {
 		IsGuest:  1,
 	}
 	if err := s.userRepo.Create(user); err != nil {
-		return nil, "", fmt.Errorf("游客创建失败")
+		return nil, "", fmt.Errorf("游客创建失败: %v", err)
 	}
 
 	token, err := s.generateToken(user)

@@ -1,40 +1,25 @@
 const app = getApp()
 
-// 'public' = 直接走公网（当前联调推荐）
-// 'cloud'  = 优先 callContainer，失败再降级公网
-// 'local'  = localhost
-const REQUEST_MODE = 'public'
+// 正式环境仅走云托管 callContainer
+// 注意：callContainer timeout 最大 15 秒，超过会无效
+const REQUEST_MODE = 'cloud'
+const CALL_TIMEOUT_MS = 14000
 
 function request(options) {
   const path = options.path || '/'
   const method = options.method || 'GET'
   const data = options.data || {}
-  const publicBase = (app.globalData && app.globalData.publicBase) || ''
+  const timeout = Math.min(options.timeout || CALL_TIMEOUT_MS, 15000)
 
   if (REQUEST_MODE === 'local') {
     return httpRequest((app.globalData.apiBase || '') + path, method, data)
   }
 
-  if (REQUEST_MODE === 'public') {
-    if (!publicBase) {
-      return Promise.reject(new Error('未配置 publicBase 公网域名'))
-    }
-    return httpRequest(publicBase + path, method, data)
-  }
-
-  // cloud 模式
-  return callContainer(path, method, data).catch(err => {
-    const msg = (err && (err.errMsg || err.message || String(err))) || ''
-    if (publicBase && /SERVICE_VERSION_NOT_FOUND|version not found|callContainer/i.test(msg)) {
-      console.warn('callContainer 失败，降级公网:', msg)
-      return httpRequest(publicBase + path, method, data)
-    }
-    return Promise.reject(err)
-  })
+  return callContainer(path, method, data, timeout)
 }
 
-function callContainer(path, method, data) {
-  const serviceName = app.globalData.serviceName || 'accounting-exam'
+function callContainer(path, method, data, timeout) {
+  const serviceName = app.globalData.serviceName || 'accounting-exam-v1'
   const header = {
     'content-type': 'application/json',
     'X-WX-SERVICE': serviceName
@@ -42,20 +27,32 @@ function callContainer(path, method, data) {
   const token = wx.getStorageSync('token')
   if (token) header['Authorization'] = 'Bearer ' + token
 
+  console.log('callContainer start', method, path)
   return app.ensureCloud().then(cloud => {
     return cloud.callContainer({
       path,
       method,
       header,
       data,
-      timeout: 15000
+      timeout: timeout || CALL_TIMEOUT_MS
     })
   }).then(res => {
-    console.log('callContainer', method, path, 'status=', res.statusCode, 'service=', serviceName)
-    const body = res && res.data !== undefined ? res.data : res
+    console.log('callContainer done', method, path, 'status=', res && res.statusCode, 'service=', serviceName)
+    if (res && res.statusCode && res.statusCode >= 400) {
+      const err = (res.data && (res.data.msg || res.data.message)) || ('HTTP ' + res.statusCode)
+      return Promise.reject({ code: res.statusCode, msg: err, data: res.data })
+    }
+    let body = res && res.data !== undefined ? res.data : res
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body)
+      } catch (e) {
+        return Promise.reject({ code: -1, msg: '响应解析失败', data: body })
+      }
+    }
     return handleResponse(body)
   }).catch(err => {
-    console.error('callContainer fail', err, '| service=', serviceName, '| env=', app.globalData.envId)
+    console.error('callContainer fail', err, '| service=', serviceName, '| env=', app.globalData.envId, '| path=', path)
     return Promise.reject(err)
   })
 }
@@ -71,6 +68,7 @@ function httpRequest(url, method, data) {
       method,
       header,
       data,
+      timeout: CALL_TIMEOUT_MS,
       success: res => {
         handleResponse(res.data).then(resolve).catch(reject)
       },
@@ -97,19 +95,51 @@ function handleResponse(data) {
   })
 }
 
+function errMsg(err) {
+  if (!err) return '网络异常'
+  if (typeof err === 'string') return err
+  return err.msg || err.errMsg || err.message || '请求失败'
+}
+
 const API = {
   login: (code) => request({ path: '/api/v1/auth/login', method: 'POST', data: { code } }),
   guestLogin: () => request({ path: '/api/v1/auth/guest', method: 'POST', data: {} }),
   listChapters: () => request({ path: '/api/v1/chapters' }),
-  getExamDetail: (id, mode) => request({ path: `/api/v1/exams/${id}?mode=${mode || 1}` }),
-  startExam: (id) => request({ path: `/api/v1/exams/${id}/start`, method: 'POST', data: {} }),
-  resumeExam: (id) => request({ path: `/api/v1/exams/${id}/resume` }),
-  saveProgress: (id, data) => request({ path: `/api/v1/exams/${id}/progress`, method: 'PUT', data }),
-  submitExam: (id, data) => request({ path: `/api/v1/exams/${id}/submit`, method: 'POST', data }),
-  getRecord: (id) => request({ path: `/api/v1/records/${id}` }),
-  listRecords: (limit) => request({ path: `/api/v1/records?limit=${limit || 20}` }),
+  getExamDetail: (id) => request({
+    path: '/api/v1/exams/' + encodeURIComponent(id)
+  }),
+  getQuestion: (id) => request({
+    path: '/api/v1/questions/' + encodeURIComponent(id)
+  }),
+  startExam: (id) => request({
+    path: '/api/v1/exams/' + encodeURIComponent(id) + '/start',
+    method: 'POST',
+    data: {}
+  }),
+  resumeExam: (id) => request({
+    path: '/api/v1/exams/' + encodeURIComponent(id) + '/resume'
+  }),
+  saveProgress: (id, data) => request({
+    path: '/api/v1/exams/' + encodeURIComponent(id) + '/progress',
+    method: 'PUT',
+    data
+  }),
+  submitExam: (id, data) => request({
+    path: '/api/v1/exams/' + encodeURIComponent(id) + '/submit',
+    method: 'POST',
+    data
+  }),
+  getRecord: (id) => request({ path: '/api/v1/records/' + encodeURIComponent(id) }),
+  listRecords: (limit) => request({
+    path: '/api/v1/records',
+    data: { limit: limit || 20 }
+  }),
   getWrongBook: () => request({ path: '/api/v1/wrong-questions' }),
-  markCorrect: (questionId) => request({ path: '/api/v1/wrong-questions/practice', method: 'POST', data: { question_id: questionId } }),
+  markCorrect: (questionId) => request({
+    path: '/api/v1/wrong-questions/practice',
+    method: 'POST',
+    data: { question_id: questionId }
+  }),
 }
 
-module.exports = { request, API }
+module.exports = { request, API, errMsg }

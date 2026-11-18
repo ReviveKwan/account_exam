@@ -62,17 +62,31 @@ Page({
   },
 
   async startExam(e) {
-    const chapterId = e.currentTarget.dataset.chapterId
-    const examId = e.currentTarget.dataset.examId
+    const ds = e.currentTarget.dataset || {}
+    const chapterId = ds.chapterId || ds.chapterid || ''
+    const examId = ds.examId || ds.examid || ''
+    console.log('startExam tap', { examId, chapterId, mode: this.data.mode })
+    if (!examId) {
+      wx.showToast({ title: '试卷信息缺失', icon: 'none' })
+      return
+    }
     wx.navigateTo({
-      url: `/pages/exam-page/exam-page?examId=${examId}&mode=${this.data.mode}&chapterId=${chapterId}`
+      url: `/pages/exam-page/exam-page?examId=${encodeURIComponent(examId)}&mode=${this.data.mode}&chapterId=${encodeURIComponent(chapterId || '')}`,
+      fail: (err) => {
+        console.error('navigateTo exam-page fail', err)
+        wx.showToast({ title: '打开答题页失败', icon: 'none' })
+      }
     })
   },
 
   resumeExam(e) {
     const examId = e.currentTarget.dataset.examId
+    if (!examId) {
+      wx.showToast({ title: '试卷信息缺失', icon: 'none' })
+      return
+    }
     wx.navigateTo({
-      url: `/pages/exam-page/exam-page?examId=${examId}&mode=1&resume=1`
+      url: `/pages/exam-page/exam-page?examId=${encodeURIComponent(examId)}&mode=1&resume=1`
     })
   }
 })

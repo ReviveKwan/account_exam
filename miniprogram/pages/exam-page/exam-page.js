@@ -1,4 +1,4 @@
-const { API } = require('../../utils/request')
+const { API, errMsg } = require('../../utils/request')
 const { formatTime, saveState, getState, clearState } = require('../../utils/exam-state')
 
 function sortAnswer(str) {
@@ -73,14 +73,23 @@ Page({
   },
 
   async loadExam(examId, mode, isResume) {
+    if (!examId) {
+      wx.showToast({ title: '缺少试卷ID', icon: 'none' })
+      this.setData({ loading: false })
+      return
+    }
     try {
-      // 始终按 mode=2 拉取答案/解析，供单题确认后本地判对错；界面 mode 仍按入口保留
-      const examData = await API.getExamDetail(examId, 2)
-      const exam = examData.exam
+      wx.showLoading({ title: '加载题目...', mask: true })
+      // 后端已始终返回答案/解析；真机避免 path 带 ?mode=
+      const examData = await API.getExamDetail(examId)
+      const exam = (examData && examData.exam) || examData || {}
       const questions = exam.questions || []
+      if (!questions.length) {
+        throw { msg: '题目列表为空，请稍后重试' }
+      }
 
       let recordId = null
-      let remainingSeconds = exam.duration_minutes * 60
+      let remainingSeconds = (exam.duration_minutes || 60) * 60
 
       if (isResume) {
         const recordData = await API.resumeExam(examId)
@@ -117,8 +126,15 @@ Page({
       this.startTimer()
     } catch (err) {
       console.error('加载考试失败:', err)
-      wx.showToast({ title: '加载失败', icon: 'none' })
+      const msg = errMsg(err)
+      wx.showModal({
+        title: '题目加载失败',
+        content: msg,
+        showCancel: false
+      })
       this.setData({ loading: false })
+    } finally {
+      wx.hideLoading()
     }
   },
 
@@ -241,8 +257,8 @@ Page({
     this.refreshQuestionView()
   },
 
-  /** 确认本题：判对错并展示解析 */
-  confirmAnswer() {
+  /** 确认本题：判对错；解析按需拉取以减小首包 */
+  async confirmAnswer() {
     const question = this.data.currentQuestion
     if (!question) return
     const existing = this.data.answers[question.id] || { answer: '', marked: false, revealed: false }
@@ -250,6 +266,28 @@ Page({
     if (!existing.answer) {
       wx.showToast({ title: '请先选择答案', icon: 'none' })
       return
+    }
+
+    // 首包未带解析时，确认后再拉单题详情
+    if (!question.analysis || !question.law_citation) {
+      try {
+        const data = await API.getQuestion(question.id)
+        const full = (data && data.question) || {}
+        const questions = this.data.questions.slice()
+        const idx = this.data.currentIndex
+        questions[idx] = {
+          ...question,
+          answer: full.answer || question.answer,
+          analysis: full.analysis || question.analysis || '',
+          law_citation: full.law_citation || question.law_citation || ''
+        }
+        this.setData({
+          questions,
+          currentQuestion: questions[idx]
+        })
+      } catch (err) {
+        console.warn('拉取解析失败，仍展示对错:', err)
+      }
     }
 
     const answers = { ...this.data.answers }

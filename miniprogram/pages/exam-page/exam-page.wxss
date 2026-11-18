@@ -69,10 +69,11 @@
 .prog-track { width: 100%; height: 8rpx; background: #F1F5F9; border-radius: 999rpx; margin-top: 16rpx; overflow: hidden; }
 .prog-fill { height: 100%; background: var(--primary); border-radius: 999rpx; transition: width 0.2s; }
 
-/* 题目区域 */
+/* 题目区域：真机 scroll-view 需明确高度，height:1px + flex:1 兼容 iOS */
 .scroll-area {
   flex: 1;
-  height: 0;
+  height: 1px;
+  width: 100%;
   box-sizing: border-box;
 }
 .scroll-inner {
