@@ -1,0 +1,170 @@
+.page {
+  min-height: 100vh;
+  background: var(--screen-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-bar.indigo { background: var(--primary); color: #fff; flex-shrink: 0; }
+.status-bar-placeholder { height: 88rpx; }
+.nav-content {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24rpx; height: 88rpx;
+}
+.nav-back { width: 160rpx; }
+.nav-center { flex: 1; text-align: center; }
+.nav-title { font-size: 32rpx; font-weight: 600; }
+.nav-capsule {
+  width: 160rpx; height: 58rpx; border-radius: 999rpx;
+  background: rgba(0,0,0,0.2); border: 1rpx solid rgba(255,255,255,0.22);
+  display: flex; align-items: center; justify-content: space-evenly;
+}
+.cap-dots { display: flex; align-items: center; gap: 5rpx; }
+.cap-dot { width: 7rpx; height: 7rpx; border-radius: 50%; background: #fff; opacity: 0.9; }
+.cap-dot.big { width: 9rpx; height: 9rpx; opacity: 1; }
+.cap-divider { width: 2rpx; height: 28rpx; background: rgba(255,255,255,0.24); }
+.cap-circle { width: 28rpx; height: 28rpx; border-radius: 50%; border: 3rpx solid #fff; display: flex; align-items: center; justify-content: center; }
+.cap-inner { width: 9rpx; height: 9rpx; border-radius: 50%; background: #fff; }
+
+.scroll-area {
+  flex: 1;
+  height: 0;
+  box-sizing: border-box;
+}
+
+.scroll-inner {
+  padding: 28rpx 32rpx 160rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.review-pool {
+  background: linear-gradient(135deg, #312E81, #4F46E5);
+  border-radius: 44rpx;
+  padding: 32rpx;
+  color: #fff;
+  box-shadow: 0 20rpx 52rpx rgba(67, 56, 202, 0.22);
+}
+
+.pool-tag {
+  font-size: 21rpx;
+  background: rgba(255, 255, 255, 0.16);
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  display: inline-block;
+}
+
+.pool-title {
+  font-size: 36rpx;
+  font-weight: 800;
+  margin-top: 18rpx;
+}
+
+.pool-highlight { color: #FDE68A; }
+
+.pool-desc {
+  font-size: 22rpx;
+  color: rgba(224, 231, 255, 0.85);
+  margin-top: 6rpx;
+}
+
+.pool-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28rpx;
+}
+
+.pool-stat { font-size: 22rpx; color: #E0E7FF; }
+
+.pool-btn {
+  padding: 14rpx 28rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  color: #4338CA;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.diagnosis-card {
+  background: #fff;
+  border-radius: 36rpx;
+  padding: 30rpx;
+  border: 1rpx solid #F1F5F9;
+  display: flex;
+  flex-direction: column;
+  gap: 22rpx;
+}
+
+.diag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diag-title { font-size: 28rpx; font-weight: 800; }
+.diag-sub { font-size: 22rpx; color: #94A3B8; }
+
+.diag-item {
+  background: #F8FAFC;
+  border-radius: 24rpx;
+  padding: 22rpx;
+  border: 1rpx solid #F1F5F9;
+}
+
+.diag-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diag-name { font-size: 26rpx; font-weight: 700; }
+.diag-ch { color: var(--primary); font-size: 22rpx; margin-right: 8rpx; }
+
+.diag-mastery-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #64748B;
+  margin-top: 8rpx;
+}
+.diag-mastery-val { color: #334155; font-weight: 600; }
+
+.diag-track {
+  height: 12rpx;
+  background: #E2E8F0;
+  border-radius: 999rpx;
+  margin-top: 12rpx;
+  overflow: hidden;
+}
+.diag-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  transition: width 0.3s;
+}
+
+.law-fav-card {
+  background: #fff;
+  border-radius: 36rpx;
+  padding: 30rpx;
+  border: 1rpx solid #F1F5F9;
+}
+
+.fav-title { font-size: 28rpx; font-weight: 800; margin-bottom: 16rpx; }
+
+.law-fav-box {
+  background: var(--primary-soft);
+  border: 1rpx solid var(--primary-border);
+  border-radius: 20rpx;
+  padding: 16rpx 20rpx;
+}
+
+.law-fav-label { font-weight: 700; font-size: 23rpx; color: #1E1B4B; }
+.law-fav-desc { color: #475569; font-size: 22rpx; margin-top: 8rpx; }
+
+.loading-page {
+  height: 100vh; display: flex; align-items: center; justify-content: center;
+}
+.loading-text { font-size: 28rpx; color: #94A3B8; }

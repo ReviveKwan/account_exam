@@ -1,0 +1,66 @@
+<!-- 07 错题攻坚与备考学情中心页 -->
+<view class="page" wx:if="{{!loading && summary}}">
+  <!-- 导航栏 -->
+  <view class="nav-bar indigo">
+    <view class="status-bar-placeholder"></view>
+    <view class="nav-content">
+      <view class="nav-back"></view>
+      <view class="nav-center"><text class="nav-title">错题攻坚与复盘</text></view>
+      <view class="nav-capsule">
+        <view class="cap-dots"><view class="cap-dot"></view><view class="cap-dot big"></view><view class="cap-dot"></view></view>
+        <view class="cap-divider"></view>
+        <view class="cap-circle"><view class="cap-inner"></view></view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area">
+    <view class="scroll-inner">
+      <!-- 智能抗遗忘复习池 -->
+      <view class="review-pool">
+        <view class="pool-tag">⚡ 智能抗遗忘复习池</view>
+        <view class="pool-title">今日待攻克 <text class="pool-highlight">{{summary.today_review}}</text> 道高频错题</view>
+        <view class="pool-desc">连续答对 2 次自动移出错题本，优先抽取多选漏选题</view>
+        <view class="pool-footer">
+          <text class="pool-stat tabular">累计错题 {{summary.total_wrong}} · 已斩题 {{summary.resolved}}</text>
+          <view class="pool-btn" bindtap="practiceWrong">立即抽题重练</view>
+        </view>
+      </view>
+
+      <!-- 各章法域掌握度诊断 -->
+      <view class="diagnosis-card">
+        <view class="diag-header">
+          <text class="diag-title">各章法域掌握度诊断</text>
+          <text class="diag-sub">基于最近模考</text>
+        </view>
+
+        <view wx:for="{{summary.chapters}}" wx:key="chapter_id" class="diag-item">
+          <view class="diag-top">
+            <text class="diag-name"><text class="diag-ch">第{{item.cnNo}}章</text>{{item.title}}</text>
+            <text class="pill wrong tabular">{{item.wrong_count}} 道错题</text>
+          </view>
+          <view class="diag-mastery-row">
+            <text class="diag-mastery-label">薄弱点：待分析</text>
+            <text class="diag-mastery-val">掌握 {{item.mastery}}%</text>
+          </view>
+          <view class="diag-track">
+            <view class="diag-fill" style="width: {{item.mastery}}%; background: {{item.mastery >= 80 ? '#059669' : '#4F46E5'}};"></view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 高频法条收藏夹 -->
+      <view class="law-fav-card">
+        <view class="fav-title">高频易混法条收藏夹</view>
+        <view class="law-fav-box">
+          <text class="law-fav-label">《民法典》第 172 条 · 表见代理构成要件</text>
+          <view class="law-fav-desc">区分"无权代理追认权"与"善意相对人主张有效合同"</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view class="loading-page" wx:if="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

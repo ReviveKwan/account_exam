@@ -1,0 +1,30 @@
+<!-- 05 交卷二次确认弹窗 -->
+<view class="backdrop" catchtap="onCancel">
+  <view class="modal-card" catchtap="">
+    <view class="warn-icon">!</view>
+    <view class="modal-title">确认提交本场试卷？</view>
+    <view class="modal-desc">
+      交卷后系统将按税务师评分标准自动判分，并生成逐题法条解析报告。
+    </view>
+
+    <view class="stat-grid tabular">
+      <view class="stat-cell">
+        <text class="stat-val done">{{answeredCount}}</text>
+        <text class="stat-lbl">已作答</text>
+      </view>
+      <view class="stat-cell mid">
+        <text class="stat-val skip">{{unansweredCount}}</text>
+        <text class="stat-lbl">未作答</text>
+      </view>
+      <view class="stat-cell">
+        <text class="stat-val mark">{{markedCount}}</text>
+        <text class="stat-lbl">疑难标记</text>
+      </view>
+    </view>
+
+    <view class="btn-row">
+      <view class="modal-btn cancel" catchtap="onCancel">再检查一下</view>
+      <view class="modal-btn confirm" catchtap="onConfirm">确认交卷</view>
+    </view>
+  </view>
+</view>

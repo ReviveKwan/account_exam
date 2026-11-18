@@ -1,0 +1,26 @@
+# 云开发自带文档库（HTTP API，非 Mongo 直连）
+cloudbase:
+  env_id: "wechat-app-d6gjceiz966031f7f"
+  # API Key 请用环境变量 CLOUDBASE_APIKEY 注入，勿写入仓库
+  instance: "(default)"   # 云开发自带实例
+  database: "(default)"
+
+jwt:
+  secret: "mobi-tou-exam-2025-secret-key"
+  expire_hours: 168
+
+wechat:
+  appid: ""
+  secret: ""
+
+server:
+  # 云托管探针默认 80；本地可 export SERVER_PORT=8080
+  port: 80
+  mode: "debug"
+
+# 环境变量（云托管必填）：
+#   CLOUDBASE_ENV_ID     环境 ID
+#   CLOUDBASE_APIKEY     服务端 API Key（控制台 → API Key 管理）
+#   CLOUDBASE_INSTANCE   默认 (default)
+#   JWT_SECRET / WX_APPID / WX_SECRET
+#   PORT 或 SERVER_PORT  监听端口（默认 80）

@@ -1,0 +1,126 @@
+<!-- 03 沉浸式答题页：单题确认判对错 + 交卷打分 -->
+<view class="page" wx:if="{{!loading}}">
+  <!-- 导航栏 -->
+  <view class="nav-bar indigo">
+    <view class="status-bar-placeholder"></view>
+    <view class="nav-content">
+      <view class="nav-back" bindtap="saveProgress" data-action="back">‹ 返回</view>
+      <view class="nav-center">
+        <text class="nav-title">{{exam.title}}</text>
+        <text class="nav-sub">单题解析 · 交卷打分</text>
+      </view>
+      <view class="nav-capsule">
+        <view class="cap-dots"><view class="cap-dot"></view><view class="cap-dot big"></view><view class="cap-dot"></view></view>
+        <view class="cap-divider"></view>
+        <view class="cap-circle"><view class="cap-inner"></view></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 计时器 -->
+  <view class="timer-strip">
+    <view class="timer-top tabular">
+      <view class="clock-pill {{remainingSeconds < 300 ? 'urgent' : ''}}">⏱ {{timerText}}</view>
+      <view class="timer-right">
+        <view class="font-btn" bindtap="toggleFontScale">Aa {{fontScale === 'standard' ? '标准' : '大字'}}</view>
+        <view class="prog-text"><text class="prog-current">{{currentIndex + 1}}</text> / {{questions.length}}</view>
+      </view>
+    </view>
+    <view class="prog-track">
+      <view class="prog-fill" style="width: {{(currentIndex + 1) / questions.length * 100}}%"></view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area {{fontScale === 'large' ? 'large-font' : ''}}">
+    <view class="scroll-inner" wx:if="{{currentQuestion}}">
+      <view class="q-meta-row">
+        <view class="q-meta-left">
+          <text class="q-badge {{currentQuestion.type === 2 ? 'multi' : 'single'}}">{{currentQuestion.type === 2 ? '多选题' : '单选题'}}</text>
+          <text class="q-year" wx:if="{{currentQuestion.year_tag}}">{{currentQuestion.year_tag}}年真题{{currentQuestion.is_modified ? '·改' : ''}}</text>
+        </view>
+        <view class="mark-btn {{currentMarked ? 'active' : ''}}" bindtap="toggleMark">
+          {{currentMarked ? '⚑ 已标疑难' : '⚑ 标记疑难'}}
+        </view>
+      </view>
+
+      <view class="rule-tip" wx:if="{{currentQuestion.type === 2}}">
+        {{optionCount}} 备选项 · 至少 2 个正确，错选不得分，少选每项得 0.5 分
+      </view>
+
+      <view class="stem-card">{{currentQuestion.stem}}</view>
+
+      <view class="opt-list">
+        <view
+          wx:for="{{optionList}}"
+          wx:key="key"
+          class="opt-item {{item.selected ? 'selected' : ''}} {{item.state}} {{currentRevealed ? 'locked' : ''}}"
+          bindtap="toggleOption"
+          data-option="{{item.key}}"
+        >
+          <view class="opt-box {{currentQuestion.type === 2 ? 'square' : 'circle'}}">{{item.key}}</view>
+          <view class="opt-txt">{{item.val}}</view>
+        </view>
+      </view>
+
+      <!-- 确认后：对错反馈 + 解析 -->
+      <view wx:if="{{currentRevealed && feedback}}" class="feedback-card {{feedback.status}}">
+        <view class="feedback-head">
+          <text class="feedback-label">{{feedback.label}}</text>
+          <text class="feedback-answer">正确答案：{{feedback.correctAnswer}}</text>
+        </view>
+        <view class="analysis-box" wx:if="{{currentQuestion.analysis}}">
+          <text class="analysis-label">【解析】</text>
+          <text class="analysis-text">{{currentQuestion.analysis}}</text>
+        </view>
+        <view class="law-box" wx:if="{{currentQuestion.law_citation}}">
+          <text class="law-label">⚖ 法条溯源：</text>{{currentQuestion.law_citation}}
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="q-footer">
+    <view class="f-btn f-prev" bindtap="prevQuestion">‹ 上一题</view>
+    <view class="f-btn f-sheet tabular" bindtap="toggleAnswerSheet">答题卡 {{currentIndex + 1}}/{{questions.length}}</view>
+    <view class="f-btn f-sub" bindtap="showSubmit">交卷</view>
+
+    <view
+      wx:if="{{!currentRevealed}}"
+      class="f-btn f-next {{currentHasAnswer ? '' : 'disabled'}}"
+      bindtap="confirmAnswer"
+    >确认解析</view>
+    <view
+      wx:elif="{{!isLastQuestion}}"
+      class="f-btn f-next"
+      bindtap="nextQuestion"
+    >下一题 ›</view>
+    <view
+      wx:else
+      class="f-btn f-next"
+      bindtap="showSubmit"
+    >交卷打分</view>
+  </view>
+
+  <answer-sheet
+    wx:if="{{showAnswerSheet}}"
+    questions="{{questions}}"
+    answers="{{answers}}"
+    current-index="{{currentIndex}}"
+    bind:goto="goToQuestion"
+    bind:close="toggleAnswerSheet"
+    bind:submit="showSubmit"
+  />
+
+  <submit-confirm
+    wx:if="{{showSubmitConfirm}}"
+    total="{{questions.length}}"
+    answers="{{answers}}"
+    bind:confirm="handleSubmit"
+    bind:cancel="hideSubmit"
+  />
+</view>
+
+<view class="loading-page" wx:if="{{loading}}">
+  <view class="loading-text">加载中...</view>
+</view>

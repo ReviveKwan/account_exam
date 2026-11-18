@@ -1,0 +1,60 @@
+<!-- 01 品牌登录与试刷引导页 -->
+<view class="login-page">
+  <!-- Hero区域 -->
+  <view class="hero">
+    <view class="hero-bg"></view>
+    <view class="hero-content">
+      <view class="logo-box">
+        <view class="logo-inner">
+          <text class="logo-icon">⚖</text>
+        </view>
+      </view>
+      <view class="brand-pill">★ 周靖《磨笔头习题》配套题库</view>
+      <view class="brand-title">法考磨笔头</view>
+      <view class="brand-sub">税务师 · 涉税服务相关法律备考系统</view>
+    </view>
+  </view>
+
+  <!-- 功能卡片区 -->
+  <view class="card-area">
+    <view class="feature-card">
+      <view class="feat-kicker">2025 考季全新收录</view>
+      <view class="feat-item">
+        <view class="feat-icon indigo">✓</view>
+        <view class="feat-text">
+          <view class="feat-t">第 7 ~ 18 章全覆盖精编真题</view>
+          <view class="feat-d">11 套核心法域专项卷 · 655 道历年真题</view>
+        </view>
+      </view>
+      <view class="divider"></view>
+      <view class="feat-item">
+        <view class="feat-icon emerald">⚖</view>
+        <view class="feat-text">
+          <view class="feat-t">税务师标准多选少选赋分引擎</view>
+          <view class="feat-d">少选每项得 0.5 分，逐题法条溯源</view>
+        </view>
+      </view>
+      <view class="mini-metrics">
+        <view class="mini-m"><text class="mini-m-val">11章</text><text class="mini-m-lbl">完整章节库</text></view>
+        <view class="mini-m"><text class="mini-m-val">19-25</text><text class="mini-m-lbl">真题年份</text></view>
+        <view class="mini-m"><text class="mini-m-val">双模式</text><text class="mini-m-lbl">模考&背题</text></view>
+      </view>
+    </view>
+
+    <!-- 按钮区 -->
+    <view class="btn-area">
+      <button class="btn-wx" bindtap="handleLogin" loading="{{loading}}">
+        微信一键授权登录
+      </button>
+      <button class="btn-guest" bindtap="handleGuest">
+        暂不登录，先体验真题试刷
+      </button>
+      <view class="agree-row" bindtap="toggleAgree">
+        <view class="agree-check {{agreed ? 'checked' : ''}}">
+          <text wx:if="{{agreed}}">✓</text>
+        </view>
+        <text class="agree-text">已阅读并同意 <text class="link">《用户协议》</text> 与 <text class="link">《隐私保护指引》</text></text>
+      </view>
+    </view>
+  </view>
+</view>

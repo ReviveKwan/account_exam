@@ -1,0 +1,106 @@
+<!-- 06 成绩诊断与法条溯源解析页 -->
+<view class="page" wx:if="{{!loading && record}}">
+  <!-- 导航栏 -->
+  <view class="nav-bar indigo">
+    <view class="status-bar-placeholder"></view>
+    <view class="nav-content">
+      <view class="nav-back" bindtap="retake">‹ 返回</view>
+      <view class="nav-center"><text class="nav-title">成绩诊断报告</text></view>
+      <view class="nav-capsule">
+        <view class="cap-dots"><view class="cap-dot"></view><view class="cap-dot big"></view><view class="cap-dot"></view></view>
+        <view class="cap-divider"></view>
+        <view class="cap-circle"><view class="cap-inner"></view></view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area">
+    <!-- 成绩卡片 -->
+    <view class="score-hero">
+      <view class="score-box">
+        <view class="score-top">
+          <!-- 环形仪表盘 -->
+          <view class="ring-wrap">
+            <view class="ring-bg" style="background: conic-gradient(var(--primary) {{record.score / record.total_score * 360}}deg, #EEF2FF 0deg);">
+              <view class="ring-inner">
+                <text class="ring-val tabular">{{record.score}}</text>
+                <text class="ring-lbl">折算总分</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 成绩信息 -->
+          <view class="score-info">
+            <view class="score-title-row">
+              <text class="score-title">{{record.exam_id}}</text>
+              <text class="pill {{record.score >= 60 ? 'pass' : 'wrong'}}">{{record.score >= 60 ? '达标通过' : '未达标'}}</text>
+            </view>
+            <view class="score-meta tabular">满分 {{record.total_score}} · 及格线 60 · 用时 {{record.durationText}}</view>
+          </view>
+        </view>
+
+        <!-- 四宫格统计 -->
+        <view class="stat-4 tabular">
+          <view class="st-cell correct-bg">
+            <text class="st-val correct-val">{{record.correct_count}}</text>
+            <text class="st-lbl">全对</text>
+          </view>
+          <view class="st-cell partial-bg">
+            <text class="st-val partial-val">{{record.partial_count}}</text>
+            <text class="st-lbl">少选半对</text>
+          </view>
+          <view class="st-cell wrong-bg">
+            <text class="st-val wrong-val">{{record.wrong_count}}</text>
+            <text class="st-lbl">错选</text>
+          </view>
+          <view class="st-cell skip-bg">
+            <text class="st-val skip-val">{{record.unanswered_count}}</text>
+            <text class="st-lbl">未答</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 筛选标签 -->
+    <view class="filter-bar">
+      <view class="filter-tab {{filterTab === 'all' ? 'active' : ''}}" bindtap="switchFilter" data-tab="all">全部 ({{answers.length}})</view>
+      <view class="filter-tab {{filterTab === 'wrong' ? 'active' : ''}}" bindtap="switchFilter" data-tab="wrong">失分题 ({{record.wrong_count + record.partial_count}})</view>
+      <view class="filter-tab {{filterTab === 'marked' ? 'active' : ''}}" bindtap="switchFilter" data-tab="marked">已标记</view>
+    </view>
+
+    <!-- 题目分析卡片 -->
+    <view class="qa-list">
+      <view wx:for="{{filteredDetails}}" wx:key="id" class="qa-item {{item.is_correct === 2 ? 'partial' : item.is_correct === 0 ? 'wrong' : 'correct'}}">
+        <view class="qa-header">
+          <text class="qa-no">第 {{index + 1}} 题</text>
+          <text class="pill {{item.is_correct === 1 ? 'pass' : item.is_correct === 2 ? 'hot' : 'wrong'}}">
+            {{item.is_correct === 1 ? '全对' : item.is_correct === 2 ? '少选得' + item.score + '分' : item.is_answered === 0 ? '未作答' : '回答错误'}}
+          </text>
+        </view>
+
+        <view class="qa-stem">{{item.stem || '题目内容加载中...'}}</view>
+
+        <view class="qa-answer-row tabular">
+          <text>你的答案：<text class="user-answer {{item.is_correct === 0 ? 'wrong' : item.is_correct === 2 ? 'partial' : 'correct'}}">{{item.user_answer || '未答'}}</text></text>
+          <text class="correct-answer">正确答案：<text class="correct-val">{{item.correct_answer}}</text></text>
+        </view>
+
+        <!-- 法条溯源 -->
+        <view class="law-box" wx:if="{{item.law_citation}}">
+          <text class="law-label">⚖ 法条溯源：</text>{{item.law_citation}}
+        </view>
+
+        <!-- 解析 -->
+        <view class="analysis-text" wx:if="{{item.analysis}}">
+          <text class="analysis-label">【解析】</text>{{item.analysis}}
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部操作 -->
+  <view class="result-footer">
+    <view class="footer-btn wrong-practice" bindtap="practiceWrong">专练失分题 ({{record.wrong_count + record.partial_count}})</view>
+    <view class="footer-btn retake-btn" bindtap="retake">再考一次</view>
+  </view>
+</view>

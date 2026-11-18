@@ -1,0 +1,13 @@
+{
+  "name": "accounting-exam-miniprogram-ci",
+  "version": "1.0.0",
+  "private": true,
+  "description": "法考磨笔头小程序 - CI 上传工具",
+  "scripts": {
+    "upload": "node scripts/upload.js",
+    "preview": "node scripts/preview.js"
+  },
+  "devDependencies": {
+    "miniprogram-ci": "^2.1.48"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "containerName": "exam-backend",
+  "servicePath": "/api/v1",
+  "containerPort": 80,
+  "minNum": 1,
+  "maxNum": 10,
+  "cpu": 1,
+  "mem": 2,
+  "policyType": "cpu",
+  "policyThreshold": 60,
+  "httpType": "https",
+  "envParams": [
+    { "name": "PORT", "value": "80" },
+    { "name": "SERVER_PORT", "value": "80" },
+    { "name": "CLOUDBASE_ENV_ID", "value": "wechat-app-d6gjceiz966031f7f" },
+    { "name": "CLOUDBASE_APIKEY", "value": "" },
+    { "name": "CLOUDBASE_INSTANCE", "value": "(default)" },
+    { "name": "CLOUDBASE_DATABASE", "value": "(default)" },
+    { "name": "JWT_SECRET", "value": "" },
+    { "name": "WX_APPID", "value": "" },
+    { "name": "WX_SECRET", "value": "" },
+    { "name": "GIN_MODE", "value": "release" }
+  ],
+  "buildDir": ".",
+  "dockerfile": "Dockerfile"
+}

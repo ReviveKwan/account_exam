@@ -1,0 +1,88 @@
+<!-- 02 题库首页与章节列表页 -->
+<view class="page">
+  <!-- Hero区域 -->
+  <view class="list-hero">
+    <view class="status-bar-placeholder"></view>
+    <view class="nav-bar">
+      <view class="nav-title">涉税服务相关法律</view>
+      <view class="nav-capsule">
+        <view class="cap-dots"><view class="cap-dot"></view><view class="cap-dot big"></view><view class="cap-dot"></view></view>
+        <view class="cap-divider"></view>
+        <view class="cap-circle"><view class="cap-inner"></view></view>
+      </view>
+    </view>
+
+    <view class="user-strip">
+      <view class="avatar">{{userInfo.nickname ? userInfo.nickname[0] : '学'}}</view>
+      <view class="user-info">
+        <view class="user-name-row">
+          <text class="user-name">{{userInfo.nickname || '备考学员'}}</text>
+          <text class="streak-pill">连刷 7 天</text>
+        </view>
+        <view class="countdown">距 2025 税务师考试还有 <text class="countdown-num">148</text> 天</view>
+      </view>
+    </view>
+
+    <view class="dash-metrics tabular" wx:if="{{dashboard}}">
+      <view class="dm-item">
+        <text class="dm-val">{{dashboard.passed_chapters}}<text class="dm-suffix">/{{dashboard.total_chapters}}章</text></text>
+        <text class="dm-lbl">已通关章节</text>
+      </view>
+      <view class="dm-item mid">
+        <text class="dm-val">{{dashboard.recent_accuracy}}%</text>
+        <text class="dm-lbl">近3次正确率</text>
+      </view>
+      <view class="dm-item">
+        <text class="dm-val emerald">{{dashboard.highest_score}}</text>
+        <text class="dm-lbl">历史最高分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 滚动内容区：padding 放在内层，避免 scroll-view 水平 padding 导致右侧溢出 -->
+  <scroll-view scroll-y class="scroll-area">
+    <view class="scroll-inner">
+      <!-- 模式切换 -->
+      <view class="mode-switch">
+      <view class="mode-btn {{mode === 1 ? 'active' : ''}}" bindtap="switchMode" data-mode="1">⏱ 限时练习打分</view>
+      <view class="mode-btn {{mode === 2 ? 'active' : ''}}" bindtap="switchMode" data-mode="2">✦ 单题解析打分</view>
+      </view>
+
+      <!-- 断点续答 -->
+      <view class="resume-bar" wx:for="{{chapters}}" wx:key="id" wx:if="{{item.has_resume}}">
+        <view class="resume-info">
+          <view class="resume-title"><text class="resume-tag">续答</text>{{item.title}}</view>
+          <view class="resume-meta tabular">上次停留在第 {{item.resume_question_no}} 题 · 剩余 {{item.resumeRemainingText}}</view>
+        </view>
+        <view class="resume-go" bindtap="resumeExam" data-exam-id="{{item.exam_id}}">继续 ›</view>
+      </view>
+
+      <!-- 分类标签 -->
+      <view class="filter-row">
+        <view class="filter-tags">
+          <text class="filter-tag active">全部 {{chapters.length}} 章</text>
+          <text class="filter-tag">民商法篇</text>
+        </view>
+        <text class="filter-source">《磨笔头》题库</text>
+      </view>
+
+      <!-- 章节卡片 -->
+      <view class="ch-card" wx:for="{{chapters}}" wx:key="id" bindtap="startExam" data-chapter-id="{{item.id}}" data-exam-id="{{item.exam_id}}">
+        <view class="ch-bar" style="background:{{item.barColor}}"></view>
+        <view class="ch-body">
+          <view class="ch-header">
+            <text class="ch-code">第{{item.cnNo}}章</text>
+            <text class="ch-title">{{item.title}}</text>
+          </view>
+          <view class="ch-meta tabular">单选{{item.single_count}} + 多选{{item.multi_count}} · {{item.duration_minutes}}分钟 · {{item.total_score}}分</view>
+          <view class="ch-badges" wx:if="{{item.badges.length > 0}}">
+            <text wx:for="{{item.badges}}" wx:for-item="badge" wx:key="text" class="pill {{badge.type}}">{{badge.text}}</text>
+          </view>
+        </view>
+        <view class="ch-arrow">›</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- TabBar由app.json配置 -->
+</view>

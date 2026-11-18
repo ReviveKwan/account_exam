@@ -1,0 +1,12 @@
+{"_id": "ch07", "chapter_no": 7, "title": "民法总论", "category": "民商法篇", "sort_order": 1, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 44, "multi_count": 33, "total_count": 77}
+{"_id": "ch08", "chapter_no": 8, "title": "物权法律制度", "category": "民商法篇", "sort_order": 2, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 46, "multi_count": 26, "total_count": 72}
+{"_id": "ch09", "chapter_no": 9, "title": "债权法律制度", "category": "民商法篇", "sort_order": 3, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 57, "multi_count": 34, "total_count": 91}
+{"_id": "ch10", "chapter_no": 10, "title": "婚姻家庭和继承法", "category": "民商法篇", "sort_order": 4, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 27, "multi_count": 17, "total_count": 44}
+{"_id": "ch11", "chapter_no": 11, "title": "个人独资企业法", "category": "企业法篇", "sort_order": 5, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 6, "multi_count": 9, "total_count": 15}
+{"_id": "ch12", "chapter_no": 12, "title": "合伙企业法", "category": "企业法篇", "sort_order": 6, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 16, "multi_count": 11, "total_count": 27}
+{"_id": "ch13", "chapter_no": 13, "title": "公司法", "category": "企业法篇", "sort_order": 7, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 34, "multi_count": 27, "total_count": 61}
+{"_id": "ch14", "chapter_no": 14, "title": "破产法", "category": "程序法篇", "sort_order": 8, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 35, "multi_count": 31, "total_count": 66}
+{"_id": "ch15", "chapter_no": 15, "title": "电子商务法", "category": "程序法篇", "sort_order": 9, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 0, "multi_count": 0, "total_count": 0}
+{"_id": "ch16", "chapter_no": 16, "title": "民事诉讼法", "category": "程序法篇", "sort_order": 10, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 17, "multi_count": 12, "total_count": 29}
+{"_id": "ch17", "chapter_no": 17, "title": "刑法", "category": "刑事法篇", "sort_order": 11, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 45, "multi_count": 26, "total_count": 71}
+{"_id": "ch18", "chapter_no": 18, "title": "刑事诉讼法", "category": "刑事法篇", "sort_order": 12, "duration_minutes": 60, "total_score": 100, "pass_score": 60, "single_count": 28, "multi_count": 17, "total_count": 45}

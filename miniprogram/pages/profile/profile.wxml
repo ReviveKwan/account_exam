@@ -1,0 +1,46 @@
+<!-- 我的学情页 -->
+<view class="page">
+  <view class="nav-bar indigo">
+    <view class="status-bar-placeholder"></view>
+    <view class="nav-content">
+      <view class="nav-back"></view>
+      <view class="nav-center"><text class="nav-title">我的学情</text></view>
+      <view class="nav-capsule">
+        <view class="cap-dots"><view class="cap-dot"></view><view class="cap-dot big"></view><view class="cap-dot"></view></view>
+        <view class="cap-divider"></view>
+        <view class="cap-circle"><view class="cap-inner"></view></view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-area">
+    <view class="scroll-inner">
+      <!-- 用户卡片 -->
+      <view class="user-card">
+        <view class="user-avatar">{{userInfo.nickname ? userInfo.nickname[0] : '学'}}</view>
+        <view class="user-meta">
+          <text class="user-name">{{userInfo.nickname || '备考学员'}}</text>
+          <text class="user-tag">{{userInfo.is_guest ? '试刷学员' : '正式学员'}}</text>
+        </view>
+      </view>
+
+      <!-- 历史记录 -->
+      <view class="section-title">近期模考记录</view>
+      <view wx:if="{{records.length === 0}}" class="empty-tip">暂无模考记录，快去刷题吧！</view>
+      <view wx:for="{{records}}" wx:key="id" class="record-card">
+        <view class="record-left">
+          <text class="record-score tabular">{{item.score}}</text>
+          <text class="record-total">/{{item.total_score}}</text>
+        </view>
+        <view class="record-info">
+          <text class="record-title">考试 #{{item.exam_id}}</text>
+          <text class="record-meta tabular">全对{{item.correct_count}} · 半对{{item.partial_count}} · 错{{item.wrong_count}} · 跳{{item.unanswered_count}}</text>
+          <text class="record-time">{{item.duration_seconds}}秒</text>
+        </view>
+        <view class="record-badge {{item.score >= 60 ? 'pass' : 'fail'}}">{{item.score >= 60 ? '通过' : '未过'}}</view>
+      </view>
+
+      <view class="logout-btn" bindtap="handleLogout">退出登录</view>
+    </view>
+  </scroll-view>
+</view>

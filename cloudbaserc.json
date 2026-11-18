@@ -1,0 +1,7 @@
+{
+  "$schema": "https://static.cloudbase.net/cli/cloudbaserc.schema.json",
+  "envId": "wechat-app-d6gjceiz966031f7f",
+  "cloudrun": {
+    "name": "accounting-exam"
+  }
+}

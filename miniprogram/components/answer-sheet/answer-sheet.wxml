@@ -1,0 +1,64 @@
+<!-- 04 分题型答题卡抽屉 -->
+<view class="backdrop" catchtap="onClose">
+  <view class="drawer" catchtap="">
+    <view class="grab"></view>
+
+    <!-- 标题区 -->
+    <view class="drawer-header">
+      <view>
+        <view class="drawer-title">分题型答题卡</view>
+        <view class="drawer-meta tabular">
+          已答 <text class="meta-done">{{answeredCount}}</text> 题 · 未答 <text class="meta-skip">{{unansweredCount}}</text> 题 · 标记疑难 <text class="meta-mark">{{markedCount}}</text> 题
+        </view>
+      </view>
+      <view class="close-btn" catchtap="onClose">✕</view>
+    </view>
+
+    <!-- 图例 -->
+    <view class="legend-row">
+      <view class="legend-item"><view class="leg-dot done"></view>已答</view>
+      <view class="legend-item"><view class="leg-dot unanswered"></view>未答</view>
+      <view class="legend-item"><view class="leg-dot marked"></view>疑难标记</view>
+      <view class="legend-item"><view class="leg-dot current"></view>当前</view>
+    </view>
+
+    <!-- 单选题区 -->
+    <scroll-view scroll-y class="sheet-scroll">
+      <view class="section">
+        <view class="section-header">
+          <text class="section-title">一、单项选择题（每题 1.5 分）</text>
+        </view>
+        <view class="num-grid tabular">
+          <view
+            wx:for="{{singleQuestions}}"
+            wx:key="index"
+            class="num-dot {{item.isAnswered ? 'done' : ''}} {{item.isMarked ? 'mark' : ''}} {{item.isCurrent ? 'cur' : ''}}"
+            catchtap="onGoTo"
+            data-index="{{item.index}}"
+          >{{item.questionNo}}</view>
+        </view>
+      </view>
+
+      <view class="section">
+        <view class="section-header">
+          <text class="section-title">二、多项选择题（少选每项得 0.5 分）</text>
+        </view>
+        <view class="num-grid tabular">
+          <view
+            wx:for="{{multiQuestions}}"
+            wx:key="index"
+            class="num-dot {{item.isAnswered ? 'done' : ''}} {{item.isMarked ? 'mark' : ''}} {{item.isCurrent ? 'cur' : ''}}"
+            catchtap="onGoTo"
+            data-index="{{item.index}}"
+          >{{item.questionNo}}</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 底部按钮 -->
+    <view class="sheet-footer">
+      <view class="sheet-btn continue" catchtap="onContinue">继续作答</view>
+      <view class="sheet-btn submit" catchtap="onSubmit">立即交卷判分</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "answer-sheet": "/components/answer-sheet/answer-sheet",
+    "submit-confirm": "/components/submit-confirm/submit-confirm"
+  },
+  "navigationStyle": "custom"
+}

@@ -1,0 +1,21 @@
+version: "3.8"
+# 本地仅跑后端容器时，需配置真实 CLOUDBASE_APIKEY 访问云开发自带实例
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: exam-backend
+    ports:
+      - "8080:80"
+    environment:
+      - GIN_MODE=release
+      - PORT=80
+      - SERVER_PORT=80
+      - CLOUDBASE_ENV_ID=wechat-app-d6gjceiz966031f7f
+      - CLOUDBASE_INSTANCE=(default)
+      - CLOUDBASE_DATABASE=(default)
+      - CLOUDBASE_APIKEY=${CLOUDBASE_APIKEY}
+      - JWT_SECRET=${JWT_SECRET:-mobi-tou-exam-2025-secret-key}
+      - WX_APPID=${WX_APPID:-}
+      - WX_SECRET=${WX_SECRET:-}

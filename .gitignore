@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+backend/config/apikey
+*.pem
+*.key
+node_modules/
+.DS_Store
+/tmp/
+.cloudrun-build/
+scripts/output/
+.idea/
+.vscode/
+*.log
+miniprogram/project.private.config.json

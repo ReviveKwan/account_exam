@@ -1,0 +1,25 @@
+# 敏感凭据 —— 本地私钥等不进镜像
+*.key
+*密钥*.txt
+private.*
+.env
+.env.*
+# 注意：backend/config/apikey 需要打进云托管镜像（运行时读取），故不在此排除
+
+# 前端与依赖（后端镜像不需要）
+miniprogram/
+node_modules/
+scripts/
+database/
+*.md
+
+# 本地配置与版本控制
+.git/
+.gitignore
+.DS_Store
+cloudbaserc.json
+deploy/
+
+# 构建产物
+backend/server
+*.log
